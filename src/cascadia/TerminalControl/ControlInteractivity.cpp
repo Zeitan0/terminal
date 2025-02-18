@@ -18,11 +18,29 @@
 using namespace ::Microsoft::Console::Types;
 using namespace ::Microsoft::Console::VirtualTerminal;
 using namespace ::Microsoft::Terminal::Core;
+using namespace winrt::Microsoft::Terminal::Settings::Model;
+using namespace winrt::Microsoft::Terminal::Settings;
 using namespace winrt::Windows::Graphics::Display;
 using namespace winrt::Windows::System;
 using namespace winrt::Windows::ApplicationModel::DataTransfer;
 
 static constexpr unsigned int MAX_CLICK_COUNT = 3;
+
+void DisableMouseWheelScrolling(TerminalSettings& settings)
+{
+    // Check if the settings object has an "EnableMouseWheelScrolling"
+    if (settings.GlobalSettings())
+    {
+        // Assuming there's a property like EnableMouseWheelScrolling, set it to false
+        settings.GlobalSettings().MouseWheelScrollingEnabled(false);
+        
+    }
+    else
+    {
+        // Handle the case if GlobalSettings is null or not initialized.
+        throw std::runtime_error("GlobalSettings not initialized.");
+    }
+}
 
 namespace winrt::Microsoft::Terminal::Control::implementation
 {
