@@ -295,6 +295,21 @@ bool TerminalInput::IsTrackingMouseInput() const noexcept
 // - Returns a string if we successfully translated it into a VT input sequence.
 TerminalInput::OutputType TerminalInput::HandleMouse(const til::point position, const unsigned int button, const short modifierKeyState, const short delta, const MouseButtonState state)
 {
+    if (button == WM_MBUTTONDOWN || button == WM_MBUTTONUP)
+    {
+        const auto deltaX = position.x - _mouseInputState.lastPos.x;
+        const auto deltaY = position.y - _mouseInputState.lastPos.y;
+
+        if (deltaY != 0)
+        {
+            ScrollBuffer(deltaY);
+        }
+
+        _mouseInputState.lastPos = position;
+        _mouseInputState.lastButton = button;
+        return {};
+    }
+
     if (Utils::Sign(delta) != Utils::Sign(_mouseInputState.accumulatedDelta))
     {
         // This works for wheel and non-wheel events and transitioning between wheel/non-wheel.
